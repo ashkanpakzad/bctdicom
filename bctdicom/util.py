@@ -16,9 +16,9 @@ def read_file(file_path: Path):
 
 def write_file(file_path: Path, data: np.ndarray, extra_attrs: dict = None):
     if file_path.suffix == ".h5" or file_path.suffix == ".hdf":
-        return write_h5(file_path, data, extra_attrs)
+        return write_h5(file_path, data, extra_attrs=extra_attrs)
     elif file_path.suffix == ".nrrd":
-        return write_nrrd(file_path, data, extra_attrs)
+        return write_nrrd(file_path, data, extra_attrs=extra_attrs)
     else:
         raise ValueError(f"Unsupported file type: {file_path}")
 
