@@ -1,4 +1,6 @@
 __pycache__/
+*.sh
 # pixi environments
 .pixi
 *.egg-info
+data/
