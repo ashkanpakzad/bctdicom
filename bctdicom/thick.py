@@ -6,7 +6,7 @@ import warnings
 import logging
 logger = logging.getLogger(__name__)
 
-def thick_axial(input: np.ndarray, input_mm: list = None, axis: int = 0, 
+def thick_reslice_axis(input: np.ndarray, input_mm: list = None, axis: int = 0, 
                 thickness_mm: float = 3, spacing_mm: float = 1.5, threshold: float = None, 
                 MIP: bool = False) -> tuple[np.ndarray, list, float]:
     """Compute thick slices from input array along specified axis.
@@ -88,10 +88,10 @@ def _validate_parameters(thickness_mm: float, spacing_mm: float,
                        output_thickness_mm: float, output_spacing_mm: float, 
                        thin_spacing_mm: float) -> None:
     """Validate parameters and log warnings for non-integer multiples."""
-    if not np.isclose(thickness_mm, round(output_thickness_mm)):
+    if not np.isclose(thickness_mm, output_thickness_mm):
         logger.warning(f"Desired thickness {thickness_mm:.1f}mm is not an integer multiple of source spacing {thin_spacing_mm:.1f}mm")
         logger.warning(f"Using {output_thickness_mm:.1f}mm instead")    
-    if not np.isclose(spacing_mm, round(output_spacing_mm)):
+    if not np.isclose(spacing_mm, output_spacing_mm):
         logger.warning(f"Desired spacing {spacing_mm:.1f}mm is not an integer multiple of source spacing {thin_spacing_mm:.1f}mm")
         logger.warning(f"Using {output_spacing_mm:.1f}mm instead")
 
