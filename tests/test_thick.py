@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from unittest.mock import patch
 
-from bctdicom.thick import thick_axial
+from bctdicom.thick import thick_reslice_axis
 
 
 class TestThickAxial:
@@ -17,7 +17,7 @@ class TestThickAxial:
         
     def test_basic_functionality_even(self):
         """Test basic thick slice computation."""
-        result, output_mm, thickness_mm = thick_axial(
+        result, output_mm, thickness_mm = thick_reslice_axis(
             self.test_array,
             input_mm=[1.0, 1.0, 1.0],
             axis=0,
@@ -41,7 +41,7 @@ class TestThickAxial:
     
     def test_basic_functionality_odd(self):
         """Test basic thick slice computation."""
-        result, output_mm, thickness_mm = thick_axial(
+        result, output_mm, thickness_mm = thick_reslice_axis(
             self.test_array,
             input_mm=[1.0, 1.0, 1.0],
             axis=0,
@@ -66,7 +66,7 @@ class TestThickAxial:
     def test_different_axes(self):
         """Test thick slice computation along different axes."""
         # Test axis 1
-        result1, _, _ = thick_axial(
+        result1, _, _ = thick_reslice_axis(
             self.test_array,
             axis=1,
             thickness_mm=2.0,
@@ -76,7 +76,7 @@ class TestThickAxial:
         assert result1.shape == expected_shape1
         
         # Test axis 2
-        result2, _, _ = thick_axial(
+        result2, _, _ = thick_reslice_axis(
             self.test_array,
             axis=2,
             thickness_mm=2.0,
@@ -92,7 +92,7 @@ class TestThickAxial:
         
     def test_threshold_processing(self):
         """Test processing with threshold for upper intensity voxels."""
-        result, _, _ = thick_axial(
+        result, _, _ = thick_reslice_axis(
             self.test_array_upper_intensity,
             threshold=0.5,
             thickness_mm=2.0,
@@ -108,7 +108,7 @@ class TestThickAxial:
         
     def test_custom_spacing(self):
         """Test with custom input spacing."""
-        result, output_mm, thickness_mm = thick_axial(
+        result, output_mm, thickness_mm = thick_reslice_axis(
             self.test_array,
             input_mm=[0.5, 1.0, 2.0],
             thickness_mm=1.5,
@@ -125,7 +125,7 @@ class TestThickAxial:
         
     def test_edge_case_single_slice(self):
         """Test edge case where thickness equals input size."""
-        result, _, thickness_mm = thick_axial(
+        result, _, thickness_mm = thick_reslice_axis(
             self.test_array,
             thickness_mm=10.0,  # Equal to input size
             spacing_mm=10.0
@@ -137,7 +137,7 @@ class TestThickAxial:
         
     def test_edge_case_large_spacing(self):
         """Test edge case with spacing larger than input size."""
-        result, _, _ = thick_axial(
+        result, _, _ = thick_reslice_axis(
             self.test_array,
             thickness_mm=2.0,
             spacing_mm=15.0  # Larger than input size
@@ -149,7 +149,7 @@ class TestThickAxial:
     def test_non_integer_spacing_warning(self):
         """Test that warnings are logged for non-integer spacing."""
         with patch('bctdicom.thick.logger') as mock_logger:
-            thick_axial(
+            thick_reslice_axis(
                 self.test_array,
                 thickness_mm=2.7,  # Not integer multiple of 1.0
                 spacing_mm=1.3     # Not integer multiple of 1.0
@@ -161,7 +161,7 @@ class TestThickAxial:
 
     def test_negative_axis(self):
         """Test behavior with negative axis values."""
-        result, _, _ = thick_axial(self.test_array,
+        result, _, _ = thick_reslice_axis(self.test_array,
                                     axis=-1,
                                     thickness_mm=2.0,
                                     spacing_mm=1.0)
@@ -172,7 +172,7 @@ class TestThickAxial:
         
     def test_threshold_none(self):
         """Test behavior when threshold is None."""
-        result, _, _ = thick_axial(
+        result, _, _ = thick_reslice_axis(
             self.test_array_upper_intensity,
             thickness_mm=2.0,
             spacing_mm=1.0,
@@ -189,7 +189,7 @@ class TestThickAxial:
         test_array = np.zeros((6, 4, 4))
         test_array[2, 2, 2] = 0.8  # Isolated upper-intensity voxel
         
-        result, _, _ = thick_axial(
+        result, _, _ = thick_reslice_axis(
             test_array,
             threshold=0.5,
             thickness_mm=2.0,
@@ -207,7 +207,7 @@ class TestThickAxial:
         test_array = np.zeros((6, 4, 4))
         test_array[2:4, 2:4, 2:4] = 0.8  # Connected upper-intensity region
         
-        result, _, _ = thick_axial(
+        result, _, _ = thick_reslice_axis(
             test_array,
             threshold=0.5,
             thickness_mm=2.0,
@@ -220,7 +220,7 @@ class TestThickAxial:
         
     def test_axis_reordering(self):
         """Test that axis reordering works correctly."""
-        result, _, _ = thick_axial(self.test_array,
+        result, _, _ = thick_reslice_axis(self.test_array,
                                     axis=1,
                                     thickness_mm=2.0,
                                     spacing_mm=1.0)
