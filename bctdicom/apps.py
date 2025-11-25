@@ -14,7 +14,7 @@ app = typer.Typer()
 def thick_reslice(input_file: Path, 
                   output_file: Path,
                   axis: int = 1,
-                  mm: list[float] = [0.1, 0.1, 0.1], 
+                  mm: tuple[float, float, float] = (0.1, 0.1, 0.1), 
                   thickness_mm: float = 3,
                   spacing_mm: float = 1.5,
                   threshold: float = 2e-10,
@@ -44,7 +44,7 @@ def thick_reslice(input_file: Path,
 
     data = read_file(input_file)
     output_file = Path(output_file)
-    
+    mm = list[float](mm)
     thick_data, mm_out, thickness_mm = thick_reslice_axis(data, mm, axis, thickness_mm, spacing_mm, threshold, MIP)
     header = {'units': ['mm', 'mm', 'mm'], 'spacings': mm_out, 'thickness': float(thickness_mm)}
     write_file(output_file, thick_data, extra_attrs=header)
@@ -52,7 +52,7 @@ def thick_reslice(input_file: Path,
 @app.command()
 def thick_reslicing_dcm(input_file: Path, 
                         output_dir: Path,
-                        mm: list[float] = [0.1, 1.5, 0.1], 
+                        mm: tuple[float, float, float] = (0.1, 1.5, 0.1), 
                         axis: int = 1,
                         thickness_mm: float = 3.0,
                         file_prefix: str = 'ax',
@@ -86,6 +86,7 @@ def thick_reslicing_dcm(input_file: Path,
     '''
     logger.setLevel(logging.DEBUG if verbose else logging.INFO)
     logger.info(f"Converting {input_file} to DICOM {output_dir}")
+    mm = list[float](mm)
 
     input_file = Path(input_file)
     output_dir = Path(output_dir)
